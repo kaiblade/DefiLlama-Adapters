@@ -10,15 +10,19 @@ const uniswapConfig = {
 const algebraConfig = {
   eventAbi: 'event Pool (address indexed token0, address indexed token1, address pool)',
   topics: ['0x91ccaa7a278130b65168c3a0c8d3bcae84cf5e43704342bd3ec0b59e59c036db'],
+  eventAbiCustom: 'event CustomPool (address indexed deployer, address indexed token0, address indexed token1, address pool)',
+  topicsCustom: ['0x8a5f030f5fc13b04a1e4ef7c47177e3d76b0e80e1d9be9843db37caa5b7b9b8f'],  
 }
 
 function uniV3Export(config) {
   const exports = {}
 
   Object.keys(config).forEach(chain => {
-    let { factory: target, fromBlock, topics, eventAbi, isAlgebra, blacklistedTokens = [], blacklistedOwners = [], permitFailure, sumChunkSize, filterFn, sumChunkSleep, onlyUseExistingCache, extraKey, } = config[chain]
-    if (!topics) topics = isAlgebra ? algebraConfig.topics : uniswapConfig.topics
-    if (!eventAbi) eventAbi = isAlgebra ? algebraConfig.eventAbi : uniswapConfig.eventAbi
+    let { factory: target, fromBlock, topics, eventAbi, isAlgebra, isCustom, blacklistedTokens = [], blacklistedOwners = [], permitFailure, sumChunkSize, filterFn, sumChunkSleep, onlyUseExistingCache, extraKey, } = config[chain]
+    // if (!topics) topics = isAlgebra ? algebraConfig.topics : uniswapConfig.topics
+    // if (!eventAbi) eventAbi = isAlgebra ? algebraConfig.eventAbi : uniswapConfig.eventAbi
+    if (!topics) topics = isAlgebra ? (isCustom ? algebraConfig.topicsCustom : algebraConfig.topics) : uniswapConfig.topics // Edited to account for algebra custom pools
+    if (!eventAbi) eventAbi = isAlgebra ? (isCustom ? algebraConfig.eventAbiCustom : algebraConfig.eventAbi) : uniswapConfig.eventAbi // Edited to account for algebra custom pools
     
     exports[chain] = {
       tvl: async (api) => {
