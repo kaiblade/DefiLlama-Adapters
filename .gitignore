@@ -17,3 +17,4 @@ scripts/tvlModules.json
 skills/tvl-failure-fixer
 pnpm-lock.yaml
 pnpm-workspace.yaml
+package-lock.json
